@@ -1,6 +1,5 @@
-version: '3'
 services:
-  task_db:
+  db:
     container_name: task_db
     image: postgres
     environment:

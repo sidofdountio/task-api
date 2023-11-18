@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -29,8 +30,10 @@ public class TaskApi {
     private final UserService userService;
 
     @PostMapping("addTask")
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+    public ResponseEntity<Task> createTask(@RequestBody Task task) throws InterruptedException {
+
         Task createdTask = taskService.createTask(task);
+        TimeUnit.SECONDS.sleep(2);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
@@ -45,13 +48,15 @@ public class TaskApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<List<Task>> getAllTasks() throws InterruptedException {
         List<Task> tasks = taskService.getAllTasks();
+        TimeUnit.SECONDS.sleep(2);
         return new ResponseEntity<>(tasks, OK);
     }
 
     @GetMapping("/assignee/{assigneeId}")
-    public ResponseEntity<List<Task>> getTasksByAssignee(@PathVariable Long assigneeId) {
+    public ResponseEntity<List<Task>> getTasksByAssignee(@PathVariable Long assigneeId) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(2);
         Appuser assignee = userService.getUser(assigneeId);
         if (assignee != null) {
             List<Task> tasks = taskService.getTasksByAssignee(assignee);
@@ -73,10 +78,12 @@ public class TaskApi {
     }
 
     @PutMapping("/assignUserTask")
-    public ResponseEntity<Task> assignUserTask(@RequestBody Task task) {
+    public ResponseEntity<Task> assignUserTask(@RequestBody Task task) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(2);
         Task existingTask = taskService.getTaskById(task.getId());
         Appuser existUser = userService.getUser(task.getAssignee().getId());
         if (existingTask != null && existUser != null) {
+
             Task updatedTask = taskService.updateTask(existingTask);
             return new ResponseEntity<>(updatedTask, OK);
         } else {

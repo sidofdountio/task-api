@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -29,12 +31,14 @@ public class Auth {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) throws InterruptedException {
         AuthenticationResponse registered = userService.register(registerRequest);
+        TimeUnit.SECONDS.sleep(2);
         return new ResponseEntity<AuthenticationResponse>(registered, CREATED);
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest authenticationRequest) throws InterruptedException {
         AuthenticationResponse authenticate = userService.authenticate(authenticationRequest);
+        TimeUnit.SECONDS.sleep(2);
         return new ResponseEntity<AuthenticationResponse>(authenticate, OK);
     }
 
