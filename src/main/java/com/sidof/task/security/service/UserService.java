@@ -74,7 +74,7 @@ public class UserService implements AppUserImplement {
         var userToSave = Appuser.builder()
                 .name(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_ADMIN)
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
         log.info("Register new user {}", userToSave);

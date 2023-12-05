@@ -41,8 +41,9 @@ public class Task {
     private Priority priority;
     private LocalDate dueDate;
     @ManyToOne
-    @JoinColumn(name = "assignee_id",referencedColumnName = "id",nullable = true)
+    @JoinColumn(name = "assignee_id",referencedColumnName = "id")
     private Appuser assignee;
+    private Long userId;
 
 
 }

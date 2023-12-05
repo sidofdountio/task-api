@@ -1,5 +1,6 @@
 package com.sidof.task.security.auth;
 
+import com.sidof.task.security.model.Appuser;
 import com.sidof.task.security.model.AuthenticationRequest;
 import com.sidof.task.security.model.AuthenticationResponse;
 import com.sidof.task.security.model.RegisterRequest;
@@ -46,5 +47,11 @@ public class Auth {
     @GetMapping(path = "/isTokenValid/{token}")
     public ResponseEntity<Boolean> isTokenValid(@PathVariable("token") String token) {
         return new ResponseEntity<Boolean>(userService.isTokenValid(token), OK);
+    }
+
+
+    @GetMapping(path = "/user/{id}")
+    public ResponseEntity<Appuser> isTokenValid(@PathVariable("id") Long id) {
+        return new ResponseEntity<Appuser>(userService.getUser(id), OK);
     }
 }

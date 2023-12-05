@@ -1,5 +1,6 @@
 package com.sidof.task.api;
 
+import com.sidof.task.Repository.TaskRepo;
 import com.sidof.task.model.Task;
 import com.sidof.task.security.model.Appuser;
 import com.sidof.task.security.service.UserService;
@@ -28,13 +29,23 @@ import static org.springframework.http.HttpStatus.OK;
 public class TaskApi {
     private final TaskServiceImpl taskService;
     private final UserService userService;
+    private final TaskRepo taskRepo;
 
     @PostMapping("addTask")
     public ResponseEntity<Task> createTask(@RequestBody Task task) throws InterruptedException {
+        var taskToSave = Task.builder()
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .status(task.getStatus())
+                .priority(task.getPriority())
+                .dueDate(task.getDueDate())
+                .assignee(task.getAssignee())
+                .userId(task.getAssignee().getId())
+                .build();
+        Task createdTask = taskService.createTask(taskToSave);
 
-        Task createdTask = taskService.createTask(task);
-        TimeUnit.SECONDS.sleep(2);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+        TimeUnit.SECONDS.sleep(1);
+        return new ResponseEntity<>(taskToSave, HttpStatus.CREATED);
     }
 
     @GetMapping("/{taskId}")
@@ -47,12 +58,32 @@ public class TaskApi {
         }
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<Task>>
+//    getAllTasks(@RequestParam(name = "userId", defaultValue = "0") int id,
+//                @RequestParam(name = "filter", defaultValue = "") String filter,
+//                @RequestParam(name = "sortOrder", defaultValue = "asc") String sortOrder,
+//                @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+//                @RequestParam(name = "pageSize", defaultValue = "3") int pageSize) throws InterruptedException {
+//        List<Task> tasks = taskService.getAllTasks((long) id, filter, sortOrder, pageNumber, pageSize);
+////        TimeUnit.SECONDS.sleep(1);
+//        return new ResponseEntity<>(tasks, OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() throws InterruptedException {
-        List<Task> tasks = taskService.getAllTasks();
-        TimeUnit.SECONDS.sleep(2);
+    public ResponseEntity<List<Task>>
+    getAllTasks() throws InterruptedException {
+        List<Task> tasks = taskRepo.findAll();
+//        TimeUnit.SECONDS.sleep(1);
         return new ResponseEntity<>(tasks, OK);
     }
+
+    @GetMapping("/tasks")
+    public ResponseEntity<List<Task>>getTasks() throws InterruptedException {
+        List<Task> tasks = taskService.taks();
+        return new ResponseEntity<>(tasks, OK);
+    }
+
 
     @GetMapping("/assignee/{assigneeId}")
     public ResponseEntity<List<Task>> getTasksByAssignee(@PathVariable Long assigneeId) throws InterruptedException {
@@ -66,7 +97,7 @@ public class TaskApi {
         }
     }
 
-                                                                                                @PutMapping("/editeTask")
+    @PutMapping("/editeTask")
     public ResponseEntity<Task> updateTask(@RequestBody Task task) {
         Task existingTask = taskService.getTaskById(task.getId());
         if (existingTask != null) {

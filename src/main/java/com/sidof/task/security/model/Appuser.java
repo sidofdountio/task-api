@@ -43,8 +43,9 @@ public class Appuser implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "appuser", fetch = EAGER)
     private List<Token> tokens = new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "assignee")
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

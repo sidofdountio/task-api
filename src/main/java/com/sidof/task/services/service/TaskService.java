@@ -14,7 +14,8 @@ import java.util.List;
 public interface TaskService {
     Task createTask(Task task);
     Task getTaskById(Long taskId);
-    List<Task> getAllTasks();
+
+    List<Task> getAllTasks(Long userId, String filter, String sortOrder, int pageNumber, int pageSize);
     List<Task> getTasksByAssignee(Appuser assignee);
     Task updateTask(Task task);
     void deleteTask(Long taskId);

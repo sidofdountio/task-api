@@ -6,6 +6,8 @@ import com.sidof.task.security.model.Appuser;
 import com.sidof.task.services.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,13 +35,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepo.findAll();
+    public List<Task> getAllTasks(Long userId, String filter, String sortOrder, int pageNumber, int pageSize) {
+        Sort.Direction direction = sortOrder.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, "userId");
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize,sort);
+        var assignee = Appuser.builder().id(userId).build();
+        return taskRepo.findByUserId(userId,pageRequest);
     }
 
     @Override
     public List<Task> getTasksByAssignee(Appuser assignee) {
-        return taskRepo.findByAssignee(assignee);
+        return null;
     }
 
     @Override
@@ -51,4 +57,10 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(Long taskId) {
         taskRepo.deleteById(taskId);
     }
+
+    public List<Task> taks(){
+        return taskRepo.findAll();
+    }
+
+
 }
